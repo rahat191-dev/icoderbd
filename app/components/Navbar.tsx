@@ -41,7 +41,7 @@ export default function Navbar() {
                     </Link>
                 ))}
             </div>
-            <div className="flex sm:flex-col-reverse gap-4 items-center">
+            <div className="flex sm:flex-col-reverse sm:justify-center gap-4 items-center sm:w-full">
                 {userLinks.map ((link, idx) =>(
                     <Link key={idx} href={link.href} >
                         {link.image && <Image 
