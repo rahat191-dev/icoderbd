@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import About from "./components/About";
-import BubbleCanvas from "./components/BubbleCanvas";
+import BubbleCanvas from "./components/features/BubbleCanvas";
 
 export default function Home() {
   return (
