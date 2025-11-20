@@ -32,8 +32,8 @@ export default function Navbar() {
     ]
 
     return (
-    <nav className="bg-nav">
-        <div className="flex justify-between items-center px-4 py-4 border-b border-neutral-200 dark:border-neutral-700">
+    <nav className="bg-nav lg:-skew-x-3 lg:origin-top-left lg:ml-6">
+        <div className="flex justify-between items-center px-4 py-4 border-b  border-neutral-200 dark:border-neutral-700">
             <div className="flex items-center sm:hidden text-foreground">
                 {mainLinks.map ((link, idx) =>(
                     <Link key={idx} href={link.href} >

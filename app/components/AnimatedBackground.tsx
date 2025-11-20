@@ -22,7 +22,7 @@ class AnimatedLine {
   constructor(path: Point2D[]) {
     this.path = path;
     this.elapsed = 0;
-    this.drawDuration = 0.3; // line draw in 1 second (faster)
+    this.drawDuration = 1; // line draw in 1 second (faster)
 this.fadeDuration = 0.3; // fade-out remains 2 seconds
  // <-- দ্রুত draw
     this.fading = false;
