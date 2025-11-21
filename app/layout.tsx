@@ -10,7 +10,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <div className="flex fixed flex-col sm:flex-row h-full z-10">
             <Navbar className="w-full sm:w-[220px] shrink-0" />
-          <main className="flex-1 sm:ml-24 w-full overflow-auto p-4">
+          <main className="flex-1 w-full overflow-auto p-4">
             {children}
           </main>
         </div>
