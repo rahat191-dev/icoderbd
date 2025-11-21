@@ -27,7 +27,7 @@ export default function About () {
     borderImage: "linear-gradient(to right, transparent, white, transparent) 1"
   }}
 >
-  <div className="text-white bg-brand rounded px-2">Age:</div>
+  <div className="text-zinc-600 bg-brand rounded px-2">Age:</div>
   <div className="text-pg">33</div>
 </div>
 
@@ -38,7 +38,7 @@ export default function About () {
     borderImage: "linear-gradient(to right, transparent, white, transparent) 1"
   }}
 >
-  <div className="text-white bg-brand rounded px-2">Residence:</div>
+  <div className="text-zinc-600 bg-brand rounded px-2">Residence:</div>
   <div className="text-pg">BANGLADESH</div>
 </div>
 
@@ -50,7 +50,7 @@ export default function About () {
 
   }}
 >
-  <div className="text-white bg-brand rounded px-2">Freelance:</div>
+  <div className="text-zinc-600 bg-brand rounded px-2">Freelance:</div>
   <div className="text-pg">Available</div>
 </div>
 
@@ -61,7 +61,7 @@ export default function About () {
     borderImage: "linear-gradient(to right, transparent, white, transparent) 1"
   }}
 >
-  <div className="text-white bg-brand rounded px-2">Address:</div>
+  <div className="text-zinc-600 bg-brand rounded px-2">Address:</div>
   <div className="text-pg">Dhaka, Bangladesh</div>
 </div>
             </div>
