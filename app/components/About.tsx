@@ -4,10 +4,67 @@ export default function About () {
 
     return (
         <main className="text-pg">
-            <div>
-                <h2><span className="text-brand font-extrabold">A</span>bout</h2>
+            <div className="lg:flex gap-10 justify-between">
+            <div className="lg:w-1/2">
+<div
+  className="flex justify-between items-center mb-6"
+  style={{
+    borderBottomWidth: "2px",
+    borderImage: "linear-gradient(to right, white, transparent) 1"
+  }}
+>
+  <h2><span className="text-brand font-extrabold">A</span>bout</h2>
+</div>
+
                 <p>I’m Rahat Hossain, a fron-end NEXT.JS Web Designer & Developer from Dhaka, Bangladesh. I specialize in responsive website design, Next.js, Typescript, Tailwind development, and SEO-friendly digital solutions.</p>
             </div>
-            
+
+            <div className="flex flex-col gap-2 lg:w-1/2">
+<div
+  className="flex justify-between items-center pb-2"
+  style={{
+    borderBottomWidth: "2px",
+    borderImage: "linear-gradient(to right, transparent, white, transparent) 1"
+  }}
+>
+  <div className="text-white bg-brand rounded px-2">Age:</div>
+  <div className="text-pg">33</div>
+</div>
+
+<div
+  className="flex justify-between items-center pb-2"
+  style={{
+    borderBottomWidth: "2px",
+    borderImage: "linear-gradient(to right, transparent, white, transparent) 1"
+  }}
+>
+  <div className="text-white bg-brand rounded px-2">Residence:</div>
+  <div className="text-pg">BANGLADESH</div>
+</div>
+
+<div
+  className="flex justify-between items-center pb-2"
+  style={{
+    borderBottomWidth: "2px",
+    borderImage: "linear-gradient(to bottom, transparent, white, transparent) 1"
+
+  }}
+>
+  <div className="text-white bg-brand rounded px-2">Freelance:</div>
+  <div className="text-pg">Available</div>
+</div>
+
+<div
+  className="flex justify-between items-center pb-2"
+  style={{
+    borderBottomWidth: "2px",
+    borderImage: "linear-gradient(to right, transparent, white, transparent) 1"
+  }}
+>
+  <div className="text-white bg-brand rounded px-2">Address:</div>
+  <div className="text-pg">Dhaka, Bangladesh</div>
+</div>
+            </div>
+            </div>
     </main>
 )}

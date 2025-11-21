@@ -1,9 +1,9 @@
 "use client";
+import BubbleCanvas from "@/lib/Animations/BubbleCanvas";
 import Image from "next/image";
 import Hero from "./components/Hero";
 import About from "./components/About";
-import BubbleCanvas from "@/lib/Animations/BubbleCanvas";
-
+import Services from "./components/Services";
 
 export default function Home() {
   return (
@@ -20,8 +20,9 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="relative z-10 sm:m-5 lg:h-full lg:overflow-y-auto">
+        <div className="relative flex flex-col z-10 gap-10 sm:m-5 lg:h-full lg:overflow-y-auto">
           <About />
+          <Services />
         </div>
       </div>
     </main>

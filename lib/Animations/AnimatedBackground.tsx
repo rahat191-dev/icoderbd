@@ -85,8 +85,10 @@ export default function AnimatedBackground({ className }: Props) {
     canvas.width = width;
     canvas.height = height;
 
-    const backgroundLinesCount = 500;
-    const maxAnimatedLines = 50;
+    // ✅ Poriborton 1: Background line shonkha ORIGINAL-er (500) moto rakha holo.
+    const backgroundLinesCount = 500; 
+    // 🌟 Poriborton 2: Maximum active animated line 500 kora holo (Original 50 x 10)
+    const maxAnimatedLines = 500; 
 
     const backgroundPaths: Point2D[][] = [];
     const animatedLines: AnimatedLine[] = [];
@@ -134,7 +136,7 @@ export default function AnimatedBackground({ className }: Props) {
       const deltaTime = (time - lastTime) / 1000;
       lastTime = time;
 
-      // Semi-transparent overlay for smooth fading
+      // Semi-transparent overlay for smooth fading (opacity 0.1)
       ctx.fillStyle = "rgba(30,30,30,0.1)";
       ctx.fillRect(0, 0, width, height);
 
@@ -151,10 +153,12 @@ export default function AnimatedBackground({ className }: Props) {
       });
 
       // Spawn new animated lines
+      // 🌟 Poriborton 3: Spawn probability 1.0 kora holo (Maximum, jate 500 line taratari spawn hoy)
       if (
         animatedLines.length < maxAnimatedLines &&
-        Math.random() < 0.2
+        Math.random() < 1.0 
       ) {
+        // Randomly choose a path from the 500 background paths
         const randomPath =
           backgroundPaths[
             Math.floor(Math.random() * backgroundPaths.length)

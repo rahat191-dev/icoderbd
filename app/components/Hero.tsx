@@ -30,7 +30,7 @@ export default function Hero() {
       Rahat Hossain
     </h1>
 
-    <div className="text-xl lg:text-xl mb-5 text-brand2 drop-shadow-md">
+    <div className="text-base mb-5 text-brand2 drop-shadow-md">
       <TypingAnimation />
     </div>
 
@@ -49,26 +49,30 @@ export default function Hero() {
   ))}
 </div>
 
-          <div className="flex w-full text-sm max-w-lg text-white font-extrabold justify-between border-t border-white p-4 !cursor-pointer relative">
-            <div className="absolute left-1/2 top-0 h-full w-px bg-white"></div>
-            <a href="#" className="flex gap-2 "> 
-              DOWNLOAD CV
-              <Image 
-              src="/images/contacts/cv-download.svg" 
-              alt="Contact"
-              width={20}
-              height={20}
-              /> 
-            </a>
-            <a href="#" className="flex gap-2 "> 
-              CONTACT ME
-              <Image 
-              src="/images/contacts/contact-me.svg" 
-              alt="Contact"
-              width={20}
-              height={20}
-              /> 
-            </a>
+ <div className="flex w-full text-sm text-white font-extrabold justify-between border-t border-white !cursor-pointer relative">
+  <div className="absolute left-1/2 top-0 h-full w-px bg-white"></div>
+<a href="#" className="flex gap-2 p-4 w-[50%] justify-center group"> 
+  DOWNLOAD CV
+  <Image 
+    src="/images/contacts/cv-download.svg" 
+    alt="Contact"
+    width={20}
+    height={20}
+    className="filter invert brightness-0 group-hover:filter-none transition duration-200"
+  /> 
+</a>
+
+<a href="#" className="flex gap-2 p-4 w-[50%] justify-center group"> 
+  CONTACT ME
+  <Image 
+    src="/images/contacts/contact-me.svg" 
+    alt="Contact"
+    width={20}
+    height={20}
+    className="filter invert brightness-0 group-hover:filter-none transition duration-200"
+  /> 
+</a>
+
           </div>
         </div>
 

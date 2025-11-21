@@ -4,37 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { useDarkMode } from "./hooks/useDarkMode";
 import TypingAnimation from "@/lib/Animations/TypingAnimation";
+import { mainLinks, userLinks, secLinks } from "./data/buttons";
 
 interface NavbarProps {
   className?: string; 
 }
 
-interface NavLinks {
-    label?: string;
-    href: string;
-    image?: string;
-}
-
 export default function Navbar({ className }: NavbarProps) {
     const { isDark, toggleDarkMode } = useDarkMode()
 
-    const mainLinks: NavLinks[] = [
-        { label: "Rahat Hossain", href: "/" }
-    ]
 
-    const userLinks: NavLinks[] = [
-        { image: "/images/svg/shop.svg", href: "/" }
-    ]
-
-    const secLinks: NavLinks[] = [
-        { image: "/images/svg/profile.svg", href: "/" },
-        { image: "/images/svg/works.svg", href: "/" },
-        { image: "/images/svg/skills.svg", href: "/" },
-        { image: "/images/svg/resume.svg", href: "/" },
-        { image: "/images/svg/blog.svg", href: "/" },
-        { image: "/images/svg/contact.svg", href: "/" },
-        { image: "/images/svg/lessons.svg", href: "/" },
-    ]
 
     return (
     <nav className="bg-nav lg:-skew-x-3 lg:origin-top-left lg:ml-6">
