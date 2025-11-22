@@ -6,6 +6,7 @@ import Image from "next/image"; // Image import is not used but kept
 import Hero from "./components/Hero";
 import About from "./components/About";
 import Services from "./components/Services";
+import Resume from "./components/Resume";
 
 export default function Home() {
   return (
@@ -28,6 +29,9 @@ export default function Home() {
   <div className="flex flex-col gap-10 sm:m-5 pb-4">
     <div id="about"><About /></div>
     <div><Services /></div>
+  </div>
+  <div className="flex flex-col gap-10 sm:m-5 pb-4">
+    <div><Resume /></div>
   </div>
 </div>
 

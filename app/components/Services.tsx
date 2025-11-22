@@ -33,9 +33,9 @@ export default function Services() {
       <div
         className="flex justify-between items-center mb-6"
         style={{
-          borderBottomWidth: "2px item-end",
-          borderImage: "linear-gradient(to right, white, transparent) 1",
-        }}
+    borderBottomWidth: "2px",
+    borderImage: "linear-gradient(to right, white, transparent) 1"
+  }}
       >
         <h2  className="text-xl font-extrabold">
           <span className="text-brand font-extrabold">M</span>y Services
@@ -50,7 +50,7 @@ export default function Services() {
     >
       <h3 className="text-xl font-bold mb-2">{service.title}</h3>
       <p
-        className="text-sm pb-10"
+        className="text-sm pb-2"
         style={{
           borderBottomWidth: "2px",
           borderImage: "linear-gradient(to right, transparent, white, transparent) 1",

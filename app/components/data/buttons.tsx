@@ -5,19 +5,15 @@ interface TypeLinks {
     image?: string;
 }
 
-   export const mainLinks: TypeLinks[] = [
-        { label: "Rahat Hossain", href: "/" }
-    ]
-
    export const userLinks: TypeLinks[] = [
         { image: "/images/svg/nav-svg/shop.svg", href: "/" }
     ]
 
    export const secLinks: TypeLinks[] = [
     { image: "/images/svg/nav-svg/profile.svg", sec: "about" },
+    { image: "/images/svg/nav-svg/resume.svg", sec: "resume" },
     { image: "/images/svg/nav-svg/works.svg", sec: "works" },
     { image: "/images/svg/nav-svg/skills.svg", sec: "skills" },
-    { image: "/images/svg/nav-svg/resume.svg", sec: "resume" },
     { image: "/images/svg/nav-svg/contact.svg", sec: "contact" },
     { image: "/images/svg/nav-svg/blog.svg", sec: "blog" },
     { image: "/images/svg/nav-svg/lessons.svg", sec: "lessons" },

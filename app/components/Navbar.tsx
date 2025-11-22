@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useDarkMode } from "./hooks/useDarkMode";
 import TypingAnimation from "@/lib/Animations/TypingAnimation";
-import { mainLinks, userLinks, secLinks } from "./data/buttons";
+import {userLinks, secLinks } from "./data/buttons";
 
 interface NavbarProps {
   className?: string; 
@@ -24,20 +24,13 @@ export default function Navbar({ className }: NavbarProps) {
     <nav className="bg-nav lg:-skew-x-3 sm:px-3 lg:origin-top-left lg:ml-6">
         <div className="flex justify-between items-center px-4 py-4 border-b border-neutral-200 dark:border-neutral-700">
             <div className="flex flex-col items-start sm:hidden text-foreground">
-                {mainLinks.map((link, idx) => (
-                 link.href && (
-                 <Link key={idx} href={link.href}>
-                  {link.label}
-               </Link>
-             )
-            ))}
-
-                <div className="mt-[-5px] text-brand text-[15px]"><TypingAnimation /></div>
+                <a href="/" className="font-extrabold text-sm">Rahat Hossain</a>
+                <div className="mt-[-5px] text-brand text-sm"><TypingAnimation /></div>
                 
             </div>
             <div className="flex sm:flex-col-reverse sm:justify-center gap-4 items-center sm:w-full">
                 {userLinks.map((link, idx) => (
-  <Link key={idx} href={link.href!}> {/* ! added here */}
+  <Link key={idx} href={link.href!}>
     {link.image && <Image 
       src={link.image!} 
       alt="Button"

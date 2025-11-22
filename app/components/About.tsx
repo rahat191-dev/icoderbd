@@ -46,8 +46,7 @@ export default function About () {
   className="flex justify-between items-center pb-2"
   style={{
     borderBottomWidth: "2px",
-    borderImage: "linear-gradient(to bottom, transparent, white, transparent) 1"
-
+    borderImage: "linear-gradient(to right, transparent, white, transparent) 1"
   }}
 >
   <div className="text-zinc-600 bg-brand rounded px-2">Freelance:</div>
@@ -55,16 +54,13 @@ export default function About () {
 </div>
 
 <div
-  className="flex justify-between items-center pb-2"
-  style={{
-    borderBottomWidth: "2px",
-    borderImage: "linear-gradient(to right, transparent, white, transparent) 1"
-  }}
+  className="flex justify-between items-center"
 >
   <div className="text-zinc-600 bg-brand rounded px-2">Address:</div>
   <div className="text-pg">Dhaka, Bangladesh</div>
 </div>
-            </div>
+
+</div>
             </div>
     </main>
 )}
