@@ -87,8 +87,7 @@ export default function AnimatedBackground({ className }: Props) {
 
     // ✅ Poriborton 1: Background line shonkha ORIGINAL-er (500) moto rakha holo.
     const backgroundLinesCount = 500; 
-    // 🌟 Poriborton 2: Maximum active animated line 500 kora holo (Original 50 x 10)
-    const maxAnimatedLines = 500; 
+    const maxAnimatedLines = width < 640 ? 40 : 500;
 
     const backgroundPaths: Point2D[][] = [];
     const animatedLines: AnimatedLine[] = [];
