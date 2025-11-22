@@ -50,6 +50,12 @@ body {
   filter: brightness(1) invert(0);
 }
 
+.scrollbar-custom {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
 .scrollbar-custom::-webkit-scrollbar {
   height: 15px;
 }
