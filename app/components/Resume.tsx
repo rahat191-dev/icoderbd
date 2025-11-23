@@ -12,7 +12,7 @@ export default function Resume () {
 
             <div>
                 <h3>EXPERINCE</h3>
-                <div className="text-brand border border-brand rounded-md">2025-Present</div>
+                <div className="inline-block text-brand px-2 border border-brand rounded-md">2025-Present</div>
                 <div>Web Developer</div>
                 <p>Monitored technical aspects of the web design for projects. What to expect from the design process.</p>
             </div>

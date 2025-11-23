@@ -79,7 +79,7 @@ export default function AnimatedBackground({ className }: Props) {
     canvas.height = height;
 
     const isMobile = width < 640;
-    const backgroundLinesCount = 500;
+    const backgroundLinesCount = isMobile ? 200 : 500;
     const maxAnimatedLines = 500;
     const spawnProb = isMobile ? 0.2 : 1.0;
 
@@ -122,8 +122,6 @@ export default function AnimatedBackground({ className }: Props) {
       // Safety check
       if (!ctx) return;
 
-      // Semi-transparent overlay
-      ctx.fillStyle = "rgba(30,30,30,0.1)";
       ctx.fillRect(0, 0, width, height);
 
       // Draw background paths
