@@ -47,9 +47,9 @@ export default function Hero() {
 
 </div>
 
- <div className="flex w-full text-sm text-white font-extrabold justify-between border-t border-white !cursor-pointer relative">
+ <div className="flex w-full text-sm text-white font-extrabold justify-between border-t border-white relative">
   <div className="absolute left-1/2 top-0 h-full w-px bg-white"></div>
-<a href="#" className="flex gap-2 p-4 w-[50%] justify-center group"> 
+<a href="#" className="flex gap-2 cursor-pointer p-4 w-[50%] justify-center group"> 
   DOWNLOAD CV
   <Image 
     src="/images/svg/contacts/cv-download.svg" 
@@ -60,7 +60,7 @@ export default function Hero() {
   /> 
 </a>
 
-<a href="#" className="flex gap-2 p-4 w-[50%] justify-center group"> 
+<a href="#" className="flex gap-2 p-4 w-[50%] cursor-pointer justify-center group"> 
   CONTACT ME
   <Image 
     src="/images/svg/contacts/contact-me.svg" 
