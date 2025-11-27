@@ -1,5 +1,5 @@
 "use client"
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useDarkMode } from "./hooks/useDarkMode";
@@ -13,6 +13,7 @@ interface NavbarProps {
 
 export default function Navbar({ className, setActiveSection }: NavbarProps) {
     const { isDark, toggleDarkMode } = useDarkMode()
+    const [isOpen, setIsOpen] = useState(false);
 
     const scrollToSection = (id:string) => {
         const element = document.getElementById(id);
@@ -22,7 +23,8 @@ export default function Navbar({ className, setActiveSection }: NavbarProps) {
     }
 
     return (
-    <nav className="bg-nav lg:-skew-x-3 sm:px-3 lg:origin-top-left lg:ml-6">
+      <nav className="">
+    <div className="bg-nav lg:h-full lg:-skew-x-3 sm:px-3 lg:origin-top-left lg:ml-6">
         <div className="flex justify-between items-center px-4 py-4 border-b border-neutral-200 dark:border-neutral-700">
             <div className="flex flex-col items-start sm:hidden text-foreground">
                 <a href="/" className="font-extrabold text-sm">Rahat Hossain</a>
@@ -51,11 +53,14 @@ export default function Navbar({ className, setActiveSection }: NavbarProps) {
                     className="icon-filter"
                     />
                 </button>
-                <div className="flex flex-col gap-[5px] group">
+                <button 
+                onClick={() => setIsOpen (!isOpen)}
+                className="flex flex-col gap-[5px] group">
                     <span className="bg-foreground w-5 h-[2px] group-hover:bg-brand group-hover:w-6 transition-all"></span>
                     <span className="bg-foreground w-6 h-[2px] group-hover:bg-brand group-hover:w-6 transition-all"></span>
                     <span className="bg-foreground w-4 h-[2px] group-hover:bg-brand group-hover:w-6 transition-all"></span>
-                </div>
+                </button>
+               
             </div>
         </div>
 
@@ -86,6 +91,22 @@ export default function Navbar({ className, setActiveSection }: NavbarProps) {
           </button>
             ))}
         </div>
+    </div>
+     <div 
+className={`
+    fixed top-0 left-0 bg-nav sm:-left-20 text-pg w-full sm:w-[400px] h-full z-50
+    transition-transform duration-300 ease-in-out
+    ${isOpen ? "translate-x-0" : "-translate-x-full"}
+  `}
+>
+            <button
+            onClick={() => setIsOpen(false)}
+            className="w-full sm:absolute bg-nav sm:w-auto sm:ml-[400px] px-6 p-4 left-0 items-center hover:text-brand"
+            >✖</button>
+                <ul className="p-4 sm:ml-20">
+                  <li>Hello..</li>
+                </ul>
+                </div>
     </nav>
     )
 }
