@@ -1,7 +1,7 @@
 "use client";
 
 import "./globals.css";
-import AnimatedBackground from "../lib/Animations/AnimatedBackground";
+import CurcuitLineAnimation from "../lib/Animations/CurcuitLineAnimation";
 import MousePointer from "@/lib/Animations/MousePointer";
 import Navbar from "./components/Navbar";
 import { useState, useEffect } from "react";
@@ -21,7 +21,7 @@ export default function RootLayout() {
     <html lang="en" className="h-full w-full m-0 p-0">
       <body className="h-full w-full bg-[#1e1e1e] m-0 p-0 relative">
         {/* Background */}
-        <AnimatedBackground className="fixed top-0 left-0 w-full h-full z-0" />
+        <CurcuitLineAnimation className="fixed top-0 left-0 w-full h-full z-0" />
 
     
         {loading ? (

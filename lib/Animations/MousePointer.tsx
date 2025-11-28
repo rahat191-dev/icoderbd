@@ -16,7 +16,7 @@ export default function MousePointer() {
     window.addEventListener("mousemove", handleMouseMove);
 
     // Hover on navbar
-    const navbar = document.querySelector(".navbar-container");
+    const navbar = document.querySelector(".mousepointer");
     const handleMouseEnter = () => setHovering(true);
     const handleMouseLeave = () => setHovering(false);
     if (navbar) {
