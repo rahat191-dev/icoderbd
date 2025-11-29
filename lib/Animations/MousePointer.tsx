@@ -1,70 +1,75 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export default function MousePointer() {
   const pointerRef = useRef<HTMLDivElement>(null);
-  const pos = useRef({ x: 0, y: 0 });      // current pointer position
-  const target = useRef({ x: 0, y: 0 });   // mouse target position
-  const [hovering, setHovering] = useState(false);
+
+  const pos = useRef({ x: 0, y: 0 });       // current pointer position
+  const target = useRef({ x: 0, y: 0 });    // actual mouse position
+
+  const hoveringRef = useRef(false);        // hover state ref
 
   useEffect(() => {
-    // Track mouse position
+    // --- Mouse move ---
     const handleMouseMove = (e: MouseEvent) => {
       target.current = { x: e.clientX, y: e.clientY };
     };
     window.addEventListener("mousemove", handleMouseMove);
 
-    // Hover on navbar
-    const navbar = document.querySelector(".mousepointer");
-    const handleMouseEnter = () => setHovering(true);
-    const handleMouseLeave = () => setHovering(false);
-    if (navbar) {
-      navbar.addEventListener("mouseenter", handleMouseEnter);
-      navbar.addEventListener("mouseleave", handleMouseLeave);
+    // --- Hover tracking ---
+    const interactiveElement = document.querySelector(".mousepointer");
+    const handleMouseEnter = () => (hoveringRef.current = true);
+    const handleMouseLeave = () => (hoveringRef.current = false);
+
+    if (interactiveElement) {
+      interactiveElement.addEventListener("mouseenter", handleMouseEnter);
+      interactiveElement.addEventListener("mouseleave", handleMouseLeave);
     }
 
-    // Smooth trailing animation
+    // --- Animation loop ---
+    let animationFrame: number;
+    const speed = 0.1;
+
     const animate = () => {
-      pos.current.x += (target.current.x - pos.current.x) * 0.05;
-      pos.current.y += (target.current.y - pos.current.y) * 0.05;
+      pos.current.x += (target.current.x - pos.current.x) * speed;
+      pos.current.y += (target.current.y - pos.current.y) * speed;
 
       if (pointerRef.current) {
-        const rect = pointerRef.current.getBoundingClientRect();
-        const width = rect.width;
-        const height = rect.height;
-        const scale = hovering ? 3 : 1;
+        const scale = hoveringRef.current ? 3 : 1;
+        pointerRef.current.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0) scale(${scale})`;
 
-        // Center the pointer exactly at the mouse
-        const offsetX = (width * scale) / 2;
-        const offsetY = (height * scale) / 2;
-
-        pointerRef.current.style.transform = `translate3d(${pos.current.x - offsetX}px, ${pos.current.y - offsetY}px, 0) scale(${scale})`;
+        // Hover style
+        pointerRef.current.style.backgroundColor = hoveringRef.current ? "transparent" : "rgb(183, 255, 111)"; // replace with brand
+        pointerRef.current.style.opacity = hoveringRef.current ? "1" : "0.5";
+        pointerRef.current.style.border = hoveringRef.current ? "1px solid rgb(183, 255, 111)" : "0";
       }
 
-      requestAnimationFrame(animate);
+      animationFrame = requestAnimationFrame(animate);
     };
+
     animate();
 
+    // --- Cleanup ---
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      if (navbar) {
-        navbar.removeEventListener("mouseenter", handleMouseEnter);
-        navbar.removeEventListener("mouseleave", handleMouseLeave);
+      if (interactiveElement) {
+        interactiveElement.removeEventListener("mouseenter", handleMouseEnter);
+        interactiveElement.removeEventListener("mouseleave", handleMouseLeave);
       }
+      cancelAnimationFrame(animationFrame);
     };
-  }, [hovering]);
+  }, []);
 
   return (
     <div
       ref={pointerRef}
       className={`
-        fixed pointer-events-none z-50
-        w-6 h-6 rounded-full left-0
-        ${hovering 
-          ? "bg-transparent opacity-100 ring-[1px] ring-brand" 
-          : "bg-brand opacity-50 ring-0"
-        }
+        hidden lg:flex fixed pointer-events-none z-50
+        w-6 h-6 rounded-full
+        -left-3 -top-3
+        transform -translate-x-1/2 -translate-y-1/2
+        transition-all duration-200 ease-out
       `}
     />
   );

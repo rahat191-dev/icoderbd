@@ -34,17 +34,17 @@ export default function Home({ activeSection, setActiveSection }: HomeProps) {
 
       {/* Desktop Layout */}
       {isDesktop && (
-        <div className="relative bg-nav lg:right-0 lg:-skew-x-3 rounded-e-xl flex-1 lg:ml-[270px] lg:h-[95vh]">
+        <div className="relative lg:right-0  overflow-auto  scrollbar-sec bg-white/90 dark:bg-zinc-800/90 lg:-skew-x-3 rounded-e-xl flex-1 lg:ml-[270px] lg:h-[95vh]">
           {sections.map(({ id, component }) => (
             <div
               key={id}
               className={`
-                absolute inset-0 transition-all duration-1000 ease-out
+                absolute inset-0  transition-all duration-1000 ease-out
                 ${activeSection === id
                   ? "opacity-100 translate-x-0"
                   : "opacity-0 pointer-events-none -translate-x-60"
                 }
-                overflow-auto scrollbar-sec pl-8 pr-5 top-5 h-[94%]
+                pl-8 pr-5 top-5 h-[94%]
               `}
             >
               {component}
@@ -56,11 +56,11 @@ export default function Home({ activeSection, setActiveSection }: HomeProps) {
       {/* Mobile Layout: separate scrollable sections */}
       {!isDesktop && (
         <>
-          <div className="bg-nav flex flex-col gap-5 p-5 overflow-y-auto scroll-smooth scrollbar-sec z-10">
+          <div className="bg-white/90 dark:bg-zinc-800/90 flex flex-col gap-5 p-5 overflow-y-auto scroll-smooth scrollbar-sec z-10">
             {sections[0].component}
           </div>
 
-          <div className="bg-nav flex flex-col gap-5 p-5 overflow-y-auto scroll-smooth scrollbar-sec z-10">
+          <div className="bg-white/90 dark:bg-zinc-800/90 flex flex-col gap-5 p-5 overflow-y-auto scroll-smooth scrollbar-sec z-10">
             {sections[1].component}
           </div>
         </>

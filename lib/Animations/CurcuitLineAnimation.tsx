@@ -13,15 +13,28 @@ export default function CurcuitLineAnimation({ className }: Props) {
   useEffect(() => {
     if (!mountRef.current) return;
 
+    // **❌ WebGPU/Adapter Error Fix Simulation (Not needed in this THREE.js code)**
+    // যেহেতু এটি Three.js কোড (WebGL ব্যবহার করে), তাই এখানে navigator.gpu চেক করার দরকার নেই।
+    // যদি কোনো কারণে WebGL কনটেক্সট তৈরি না হয়, তাহলে এটি স্বয়ংক্রিয়ভাবে ব্যর্থ হবে।
+
     let width = window.innerWidth;
     let height = window.innerHeight;
 
-    // --- Three.js Setup ---
+    // -------- Renderer --------
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    
+    // WebGL Renderer তৈরি না হলে, এখানে কোড ক্র্যাশ করতে পারে। 
+    // যদি renderer তৈরি না হয়, আমরা return করে দেবো।
+    if (!renderer) {
+        console.error("WebGL Renderer failed to initialize.");
+        return;
+    }
+
     renderer.setSize(width, height);
     renderer.setClearColor(0x1e1e1e, 1);
     mountRef.current.appendChild(renderer.domElement);
 
+    // -------- Camera --------
     const camera = new THREE.OrthographicCamera(
       width / -2,
       width / 2,
@@ -34,31 +47,116 @@ export default function CurcuitLineAnimation({ className }: Props) {
 
     const scene = new THREE.Scene();
 
-    // --- Configuration ---
+    const isMobile = window.innerWidth < 768;
     const gridSize = 4;
-    const totalLinePaths = 500;
-    const maxAnimatedLines = 60; 
+    const totalLinePaths = isMobile ? 150 : 400;
+    const maxAnimatedLines = isMobile ? 20 : 60;
+    
+    // **FINAL OPTIMIZATION VARIABLES (Circular Buffer Setup)**
+    const MAX_POINTS = isMobile ? 30000 : 100000;
+    const MAX_COMPONENTS = MAX_POINTS * 3; // 3D পজিশন: x, y, z
+
+    // mergedPositions: প্রি-অ্যালোকেটেড Float32Array (FIFO Data)
+    const mergedPositions = new Float32Array(MAX_COMPONENTS); 
+    
+    // mergedPathSegments: FIFO বাফার ম্যানেজ করার জন্য প্রতিটি লাইনের কম্পোনেন্ট সংখ্যা রাখে।
+    const mergedPathSegments: number[] = []; 
+    
+    // totalActiveComponents: বর্তমানে কত কম্পোনেন্ট রেন্ডার হচ্ছে তার হিসেব রাখে।
+    let totalActiveComponents = 0;
+    // **END FINAL OPTIMIZATION VARIABLES**
+
+
     const animatedLines: AnimatedLine[] = [];
-    const backgroundLines: THREE.Line[] = []; 
 
     type Point2D = { x: number; y: number };
 
-    // স্থির ধূসর ব্যাকগ্রাউন্ডের মেটেরিয়াল (চিকন লাইন)
-    const backgroundMaterial = new THREE.LineBasicMaterial({
-        color: 0x333333,
-        linewidth: 0.5,
+    // -----------------------------
+    // MERGED BACKGROUND BUFFER
+    // -----------------------------
+    const mergedBackgroundGeometry = new THREE.BufferGeometry();
+    
+    mergedBackgroundGeometry.setAttribute(
+      "position",
+      new THREE.BufferAttribute(mergedPositions, 3).setUsage(THREE.DynamicDrawUsage)
+    );
+    mergedBackgroundGeometry.setDrawRange(0, 0); 
+
+    const mergedBackgroundMaterial = new THREE.LineBasicMaterial({
+      color: 0x333333,
+      linewidth: 1,
     });
 
+    const mergedBackgroundLine = new THREE.LineSegments(
+      mergedBackgroundGeometry,
+      mergedBackgroundMaterial
+    );
+    scene.add(mergedBackgroundLine);
+
+    /**
+     * নতুন পথকে সার্কুলার বাফারে যুক্ত করে।
+     * এটিই ল্যাগ-মুক্ত FIFO লজিক।
+     */
+    function mergePath(path: Point2D[]) {
+      const pathComponents: number[] = []; 
+
+      for (let i = 0; i < path.length - 1; i++) {
+        const p1 = path[i];
+        const p2 = path[i + 1];
+        pathComponents.push(p1.x, p1.y, 0, p2.x, p2.y, 0);
+      }
+      
+      const newComponentCount = pathComponents.length;
+      let componentsToRemove = 0;
+
+      // 1. FIFO: কতগুলি পুরোনো কম্পোনেন্ট সরাতে হবে তা নির্ধারণ করা 
+      while (totalActiveComponents + newComponentCount > MAX_COMPONENTS) {
+          if (mergedPathSegments.length === 0) break;
+          
+          const oldestSegmentComponents = mergedPathSegments.shift()!;
+          componentsToRemove += oldestSegmentComponents;
+      }
+      
+      if (componentsToRemove > 0) {
+          // 2. ডেটা শিফটিং: Float32Array.copyWithin ব্যবহার করে ডেটা দ্রুত কপি করা
+          const srcStart = componentsToRemove;
+          const destStart = 0;
+          const numToCopy = totalActiveComponents - componentsToRemove;
+          
+          // ডেটা শিফট করা
+          mergedPositions.copyWithin(destStart, srcStart, srcStart + numToCopy);
+
+          totalActiveComponents = numToCopy;
+      }
+      
+      // 3. নতুন ডেটা যুক্ত করা: বাফারের শেষে নতুন ডেটা লেখা
+      let currentWriteOffset = totalActiveComponents;
+      
+      for (let i = 0; i < newComponentCount; i++) {
+        mergedPositions[currentWriteOffset + i] = pathComponents[i];
+      }
+      
+      // 4. ট্র্যাকার আপডেট করা
+      mergedPathSegments.push(newComponentCount);
+      totalActiveComponents += newComponentCount;
+
+      // 5. Geometry আপডেট করা 
+      const positionAttribute = mergedBackgroundGeometry.getAttribute('position');
+      positionAttribute.needsUpdate = true;
+
+      // Draw Range আপডেট করা
+      mergedBackgroundGeometry.setDrawRange(0, totalActiveComponents / 3); 
+    }
+
+    // -------- Create Random Paths --------
     const availablePaths: Point2D[][] = [];
 
-    // --- Path Generation ---
     function createRandomPath(): Point2D[] {
       const path: Point2D[] = [];
       let x = Math.random() * width - width / 2;
       let y = Math.random() * height - height / 2;
       path.push({ x, y });
 
-      // Line Length 3x longer
       const length = (Math.random() * 50 + 20) * 3; 
       let direction = Math.floor(Math.random() * 4);
 
@@ -69,34 +167,48 @@ export default function CurcuitLineAnimation({ className }: Props) {
           case 2: x -= gridSize; break;
           case 3: y -= gridSize; break;
         }
+
         x = Math.min(Math.max(x, -width / 2), width / 2);
         y = Math.min(Math.max(y, -height / 2), height / 2);
+
         path.push({ x, y });
+
         if (Math.random() < 0.3) direction = Math.floor(Math.random() * 4);
       }
       return path;
     }
 
-    function pathToVector3(path: Point2D[]): THREE.Vector3[] {
-      return path.map(p => new THREE.Vector3(p.x, p.y, 0));
+    function pathToVec3(path: Point2D[]) {
+      return path.map((p) => new THREE.Vector3(p.x, p.y, 0));
     }
 
     function initializeAvailablePaths() {
-        availablePaths.length = 0;
-        for (let i = 0; i < totalLinePaths; i++) {
-            availablePaths.push(createRandomPath());
-        }
+      availablePaths.length = 0;
+      for (let i = 0; i < totalLinePaths; i++) {
+        availablePaths.push(createRandomPath());
+      }
     }
+
     initializeAvailablePaths();
 
-    // --- Animated Line Class (Optimized with Draw Range) ---
+    // -----------------------------
+    // PRE-POPULATE BACKGROUND LINES
+    // -----------------------------
+    const initialBackgroundLines = isMobile ? 50 : 150; 
+    for (let i = 0; i < initialBackgroundLines; i++) {
+      const path = createRandomPath(); 
+      mergePath(path); 
+    }
+
+    // -----------------------------
+    // ANIMATED LINE CLASS (No Change)
+    // -----------------------------
     class AnimatedLine {
       path: Point2D[];
-      lineMesh: THREE.Line;
-      backgroundMesh: THREE.Line; 
       geometry: THREE.BufferGeometry;
+      line: THREE.Line;
 
-      index = 1; 
+      index = 1;
       speed: number;
       fading = false;
       opacity = 1;
@@ -106,59 +218,46 @@ export default function CurcuitLineAnimation({ className }: Props) {
       constructor(path: Point2D[]) {
         this.path = path;
         this.totalPoints = path.length;
-        const positions = pathToVector3(this.path);
-        
-        // 1. স্থির ধূসর ব্যাকগ্রাউন্ড লাইন তৈরি: এটি Initially Hidden
-        const bgGeometry = new THREE.BufferGeometry().setFromPoints(positions);
-        this.backgroundMesh = new THREE.Line(bgGeometry, backgroundMaterial);
-        this.backgroundMesh.visible = false; 
-        scene.add(this.backgroundMesh);
-        backgroundLines.push(this.backgroundMesh); 
 
-        // 2. অ্যানিমেটেড সবুজ লাইন তৈরি 
-        this.geometry = new THREE.BufferGeometry().setFromPoints(positions);
-        this.geometry.setDrawRange(0, 1); 
-        
-        const animMaterial = new THREE.LineBasicMaterial({
-            color: 0xb7ff6f,
-            transparent: true,
-            opacity: 1,
-            linewidth: 0.5,
+        const pts = pathToVec3(path);
+        this.geometry = new THREE.BufferGeometry().setFromPoints(pts);
+        this.geometry.setDrawRange(0, 1);
+
+        const material = new THREE.LineBasicMaterial({
+          color: 0xb7ff6f,
+          transparent: true,
+          opacity: 1,
+          linewidth: 1,
         });
-        this.lineMesh = new THREE.Line(this.geometry, animMaterial);
-        scene.add(this.lineMesh);
-        
-        // গতি ৩ গুণ বাড়ানো হয়েছে
+
+        this.line = new THREE.Line(this.geometry, material);
+        scene.add(this.line);
+
         const baseSpeed = Math.random() * 1.5 + 0.75;
         this.speed = baseSpeed * 3; 
 
-        // ✅ ফেইড আউট গতি ২ গুণ দ্রুত: (1 / (60 * 3)) এর বদলে (1 / (60 * 1.5))
-        this.fadeStep = 1 / (60 * 1.5); // 1.5 সেকেন্ডের ফেইড টাইম
+        this.fadeStep = 1 / (60 * 1.5); 
       }
 
-      update(): boolean {
-        // Line drawing animation
+      update() {
         if (!this.fading) {
           this.index += this.speed;
-          
+
           if (this.index >= this.totalPoints) {
             this.index = this.totalPoints;
             this.fading = true;
-            // ✅ পরিবর্তন: যখন আঁকা শেষ হবে, তখনই ব্যাকগ্রাউন্ড visible হবে
-            this.backgroundMesh.visible = true; 
-          }
-          
-          this.geometry.setDrawRange(0, Math.floor(this.index));
 
+            mergePath(this.path); 
+          }
+
+          this.geometry.setDrawRange(0, Math.floor(this.index));
         }
 
-        // Fading animation
         if (this.fading) {
           this.opacity -= this.fadeStep;
-          (this.lineMesh.material as THREE.LineBasicMaterial).opacity = this.opacity;
+          (this.line.material as THREE.LineBasicMaterial).opacity = this.opacity;
 
           if (this.opacity <= 0) {
-            
             this.dispose();
             return true;
           }
@@ -167,25 +266,26 @@ export default function CurcuitLineAnimation({ className }: Props) {
       }
 
       dispose() {
-          if (this.lineMesh.parent) {
-              scene.remove(this.lineMesh);
-              this.geometry.dispose();
-              (this.lineMesh.material as THREE.LineBasicMaterial).dispose();
-          }
+        if (this.line.parent) {
+          scene.remove(this.line);
+          this.geometry.dispose();
+          (this.line.material as THREE.LineBasicMaterial).dispose();
+        }
       }
     }
 
-    // --- Animation Loop ---
+    // -----------------------------
+    // ANIMATION LOOP
+    // -----------------------------
     function animate() {
       requestAnimationFrame(animate);
 
-      // Spawn new animated lines
       if (animatedLines.length < maxAnimatedLines && Math.random() < 0.2) {
-        const randomPath = availablePaths[Math.floor(Math.random() * availablePaths.length)];
-        animatedLines.push(new AnimatedLine(randomPath)); 
+        const randomIndex = Math.floor(Math.random() * availablePaths.length);
+        const randomPath = availablePaths[randomIndex];
+        animatedLines.push(new AnimatedLine(randomPath));
       }
 
-      // Update and remove finished lines
       for (let i = animatedLines.length - 1; i >= 0; i--) {
         if (animatedLines[i].update()) animatedLines.splice(i, 1);
       }
@@ -195,34 +295,43 @@ export default function CurcuitLineAnimation({ className }: Props) {
 
     animate();
 
-    // --- Cleanup & Resize Handler ---
+    // -----------------------------
+    // RESIZE HANDLER
+    // -----------------------------
     const handleResize = () => {
-        width = window.innerWidth;
-        height = window.innerHeight;
+      width = window.innerWidth;
+      height = window.innerHeight;
 
-        renderer.setSize(width, height);
-        camera.left = width / -2;
-        camera.right = width / 2;
-        camera.top = height / 2;
-        camera.bottom = height / -2;
-        camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
 
-        animatedLines.forEach(line => line.dispose());
-        animatedLines.length = 0;
+      camera.left = width / -2;
+      camera.right = width / 2;
+      camera.top = height / 2;
+      camera.bottom = height / -2;
+      camera.updateProjectionMatrix();
 
-        backgroundLines.forEach(line => {
-            scene.remove(line);
-            line.geometry.dispose();
-        });
-        backgroundLines.length = 0;
+      animatedLines.forEach((line) => line.dispose());
+      animatedLines.length = 0;
 
-        initializeAvailablePaths();
+      // বাফার রিসেট
+      totalActiveComponents = 0;
+      mergedPathSegments.length = 0; 
+      mergedBackgroundGeometry.setDrawRange(0, 0); 
+      mergedBackgroundGeometry.getAttribute('position').needsUpdate = true;
+
+      initializeAvailablePaths();
+      // রিসাইজের পরেও ব্যাকগ্রাউন্ড আবার পূরণ করা
+      for (let i = 0; i < initialBackgroundLines; i++) {
+        const path = createRandomPath();
+        mergePath(path);
+      }
     };
-
 
     window.addEventListener("resize", handleResize);
 
-    // --- Cleanup ---
+    // -----------------------------
+    // CLEANUP
+    // -----------------------------
     return () => {
       window.removeEventListener("resize", handleResize);
       renderer.dispose();
@@ -230,7 +339,9 @@ export default function CurcuitLineAnimation({ className }: Props) {
     };
   }, []);
 
-  return <div className={`${className} relative`}>
+  return (
+    <div className={`${className} absolute`}>
       <div ref={mountRef} className="w-full h-full absolute top-0 left-0" />
-    </div>;
+    </div>
+  );
 }
