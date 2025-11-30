@@ -41,7 +41,7 @@ export default function MousePointer() {
 
         // Hover style
         pointerRef.current.style.backgroundColor = hoveringRef.current ? "transparent" : "rgb(183, 255, 111)"; // replace with brand
-        pointerRef.current.style.opacity = hoveringRef.current ? "1" : "0.5";
+        pointerRef.current.style.opacity = hoveringRef.current ? "0.7" : "0.5";
         pointerRef.current.style.border = hoveringRef.current ? "1px solid rgb(183, 255, 111)" : "0";
       }
 

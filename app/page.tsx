@@ -1,27 +1,35 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Component, useEffect, useState } from "react";
+// Assuming these components are defined elsewhere
 import Hero from "./components/Hero";
 import About from "./components/About";
 import Services from "./components/Services";
 import Resume from "./components/Resume";
+import Skills from "./components/Skills";
+import GetInTouch from "./components/GetInTouch";
+import ContactForm from "./components/ContactForm";
 
 interface HomeProps {
   activeSection: string;
   setActiveSection: (section: string) => void;
 }
 
+// Data defining your sections
 const sections = [
   { id: "about", component: <> <About /> <Services /> </> },
   { id: "resume", component: <Resume /> },
+  { id: "skills", component: <Skills />},
+  { id: "contact", component: <> <GetInTouch /> <ContactForm /> </> }
 ];
 
 export default function Home({ activeSection, setActiveSection }: HomeProps) {
   const [isDesktop, setIsDesktop] = useState(true);
 
+  // Effect to handle responsive layout based on screen size
   useEffect(() => {
     const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
-    handleResize();
+    handleResize(); // Initial check
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -29,12 +37,12 @@ export default function Home({ activeSection, setActiveSection }: HomeProps) {
   return (
     <main className="relative w-full flex flex-col lg:flex-row gap-6">
 
-      {/* Hero Section */}
+      {/* Hero Section - Always visible */}
       <Hero />
 
-      {/* Desktop Layout */}
+      {/* Desktop Layout: Stacked, absolute positioned sections */}
       {isDesktop && (
-        <div className="relative lg:right-0  overflow-auto  scrollbar-sec bg-white/90 dark:bg-zinc-800/90 lg:-skew-x-3 rounded-e-xl flex-1 lg:ml-[270px] lg:h-[95vh]">
+        <div className="relative lg:right-0  overflow-auto  scrollbar-sec bg-white/70 dark:bg-zinc-800/70 lg:-skew-x-3 rounded-e-xl flex-1 lg:ml-[270px] lg:h-[95vh]">
           {sections.map(({ id, component }) => (
             <div
               key={id}
@@ -53,16 +61,39 @@ export default function Home({ activeSection, setActiveSection }: HomeProps) {
         </div>
       )}
 
-      {/* Mobile Layout: separate scrollable sections */}
+      {/* Mobile Layout: separate, sequentially displayed sections.
+        FIXED: Added id attributes for smooth scrolling from the Navbar.
+      */}
       {!isDesktop && (
         <>
-          <div className="bg-white/90 dark:bg-zinc-800/90 flex flex-col gap-5 p-5 overflow-y-auto scroll-smooth scrollbar-sec z-10">
+          <div 
+            id={sections[0].id} // Added id="about"
+            className="bg-white/70 dark:bg-zinc-800/70 flex flex-col gap-5 p-5 overflow-y-auto scroll-smooth scrollbar-sec z-10"
+          >
             {sections[0].component}
           </div>
 
-          <div className="bg-white/90 dark:bg-zinc-800/90 flex flex-col gap-5 p-5 overflow-y-auto scroll-smooth scrollbar-sec z-10">
+          <div 
+            id={sections[1].id} // Added id="resume"
+            className="bg-white/70 dark:bg-zinc-800/70 flex flex-col gap-5 p-5 overflow-y-auto scroll-smooth scrollbar-sec z-10"
+          >
             {sections[1].component}
           </div>
+
+          <div 
+            id={sections[2].id} // Added id="resume"
+            className="bg-white/70 dark:bg-zinc-800/70 flex flex-col gap-5 p-5 overflow-y-auto scroll-smooth scrollbar-sec z-10"
+          >
+            {sections[2].component}
+          </div>
+
+          <div 
+            id={sections[3].id} // Added id="resume"
+            className="bg-white/70 dark:bg-zinc-800/70 flex flex-col gap-5 p-5 overflow-y-auto scroll-smooth scrollbar-sec z-10"
+          >
+            {sections[3].component}
+          </div>
+
         </>
       )}
 

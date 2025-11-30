@@ -2,9 +2,10 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useDarkMode } from "./hooks/useDarkMode";
+// Assuming these are defined elsewhere
+import { useDarkMode } from "./hooks/useDarkMode"; 
 import TypingAnimation from "@/lib/Animations/TypingAnimation";
-import {userLinks, secLinks } from "./data/buttons";
+import { userLinks, secLinks } from "./data/buttons"; 
 
 interface NavbarProps {
   className?: string; 
@@ -12,13 +13,17 @@ interface NavbarProps {
 }
 
 export default function Navbar({ className, setActiveSection }: NavbarProps) {
-    const { isDark, toggleDarkMode } = useDarkMode()
+    // Placeholder hooks and data structures for compilation
+    const { isDark, toggleDarkMode } = useDarkMode(); // Assuming this returns {isDark: boolean, toggleDarkMode: () => void}
     const [isOpen, setIsOpen] = useState(false);
 
     const scrollToSection = (id:string) => {
         const element = document.getElementById(id);
         if (element) {
+            // This scrolls the entire page to the element
             element.scrollIntoView({behavior: "smooth", block: "start"})
+            // Close mobile menu after clicking a link
+            setIsOpen(false); 
         }
     }
 
@@ -70,11 +75,13 @@ export default function Navbar({ className, setActiveSection }: NavbarProps) {
             key={idx} 
             onClick={() => {
               if (link.sec) {
-                if (setActiveSection) {
-                  // Desktop: toggle section
-                  setActiveSection(link.sec);
+                if (window.innerWidth >= 1024) { // Explicitly check for desktop
+                  if (setActiveSection) {
+                    // Desktop: toggle section (via state)
+                    setActiveSection(link.sec);
+                  }
                 } else {
-                  // Mobile: scroll
+                  // Mobile: scroll (via DOM ID)
                   scrollToSection(link.sec);
                 }
               }
