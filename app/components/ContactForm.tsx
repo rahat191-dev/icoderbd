@@ -29,7 +29,7 @@ export default function ContactForm() {
   return (
     <main>
       <h2
-        className="mb-6 text-pg font-extrabold"
+        className="mb-6 text-foreground font-extrabold"
         style={{
           borderBottomWidth: "1px",
           borderImage: "linear-gradient(to right, var(--pg-color), transparent) 1",
@@ -47,7 +47,7 @@ export default function ContactForm() {
             value={formData.name}
             onChange={handleChange}
             required
-            className="border rounded-lg border-zinc-400 bg-transparent p-2 outline-none focus:border-brand"
+            className="border rounded-lg border-pg bg-transparent p-2 outline-none focus:border-brand"
           />
           <input
             type="email"
@@ -56,7 +56,7 @@ export default function ContactForm() {
             value={formData.email}
             onChange={handleChange}
             required
-            className="border rounded-lg border-zinc-400 bg-transparent p-2 outline-none focus:border-brand"
+            className="border rounded-lg border-pg bg-transparent p-2 outline-none focus:border-brand"
           />
         </div>
 
@@ -67,7 +67,7 @@ export default function ContactForm() {
           onChange={handleChange}
           required
           rows={3}
-          className="border rounded-lg border-zinc-400 bg-transparent p-2 outline-none focus:border-brand"
+          className="border rounded-lg border-pg bg-transparent p-2 outline-none focus:border-brand"
         />
 
         <button

@@ -36,7 +36,7 @@ export default function Services() {
     <main className="text-pg py-8">
       {/* Section Title */}
       <div
-        className="flex justify-between items-center mb-6"
+        className="flex justify-between text-foreground items-center mb-6"
         style={{
     borderBottomWidth: "1px",
     borderImage: "linear-gradient(to right, var(--pg-color), transparent) 1"

@@ -4,11 +4,11 @@
 
 :root {
   --background: white;
-  --foreground: black;
+  --foreground: rgb(44, 44, 44);
   --nav-color: white;
   --brand: rgb(183, 255, 111);
   --brand2: rgb(183, 255, 111);
-  --pg-color:rgb(70, 70, 70);
+  --pg-color:rgb(110, 110, 110);
   --bd-color:rgb(212, 212, 212);
 }
 
@@ -29,7 +29,7 @@ html.dark {
   --foreground: white;
   --nav-color: rgb(46, 45, 45);
   --brand2: white;
-  --pg-color:rgb(202, 202, 202);
+  --pg-color:rgb(180, 180, 180);
 }
 
 body {

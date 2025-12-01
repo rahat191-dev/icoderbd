@@ -4,7 +4,7 @@ export default function Resume () {
     return (
         <main className=" text-pg">
             
-            <h2 className="mb-6 font-extrabold"
+            <h2 className="mb-6 text-foreground font-extrabold"
             style={{
     borderBottomWidth: "1px",
     borderImage: "linear-gradient(to right, var(--pg-color), transparent) 1"

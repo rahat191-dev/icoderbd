@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
+// Resend API key from .env.local
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
@@ -10,8 +11,9 @@ export async function POST(req: Request) {
 
     // Send Email
     const data = await resend.emails.send({
-      from: "Portfolio Contact Form <onboarding@resend.dev>",
-      to: "rahat292.dev@gmail.com",        // তোমার ইমেইল
+      // Sender name = Rahat Hossain, email = verified Resend email
+      from: "Rahat Hossain <onboarding@resend.dev>",
+      to: "rahat292.dev@gmail.com",        
       subject: `New Message from ${name}`,
       html: `
         <h3>New Contact Message</h3>

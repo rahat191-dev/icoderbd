@@ -5,7 +5,7 @@ export default function Skills() {
     return (
         <main className="text-zinc-400">
         
-            <h2 className="mb-6 text-pg font-extrabold"
+            <h2 className="mb-6 text-foreground font-extrabold"
             style={{
     borderBottomWidth: "1px",
     borderImage: "linear-gradient(to right, var(--pg-color), transparent) 1"
