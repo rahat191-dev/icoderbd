@@ -21,7 +21,6 @@ export default function Blog () {
                     <h3 className="font-extrabold">BDC PRESS</h3>
                 </div> 
                 <YouTube />
-                <p>working</p>
 </section>
 
 </main>

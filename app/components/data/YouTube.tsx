@@ -5,16 +5,15 @@ interface Video {
   videoId: string;
   title: string;
   thumbnail: string;
-  // 1. ADDED publishedAt to interface
-  publishedAt: string; 
+  publishedAt: string;
 }
 
-// Function to format the date string
+// Format date helper
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 };
 
@@ -34,26 +33,32 @@ export default function YouTube() {
       });
   }, []);
 
-  // --- (Fix from previous exchange is also included in the iframe) ---
-
   return (
     <div className="p-4">
+      {/* Channel Logo */}
       {logo && (
-        <img src={logo} alt="Channel Logo" className="w-20 h-20 rounded-full mb-4" />
+        <img
+          src={logo}
+          alt="Channel Logo"
+          className="w-20 h-20 rounded-full mb-4"
+        />
       )}
 
+      {/* Video Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {videos.map((video) => (
-          <div key={video.videoId} className="relative rounded-lg overflow-hidden">
+          <div
+            key={video.videoId} // 🔥 FIXED — unique key
+            className="relative rounded-lg overflow-hidden shadow"
+          >
             {playingVideo === video.videoId ? (
               <iframe
                 className="w-full h-[180px]"
                 src={`https://www.youtube.com/embed/${video.videoId}?autoplay=1&mute=0`}
                 title={video.title}
-                // Updated 'allow' for robust fullscreen support
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
                 allowFullScreen
-              ></iframe>
+              />
             ) : (
               <>
                 <img src={video.thumbnail} alt={video.title} className="w-full" />
@@ -65,10 +70,11 @@ export default function YouTube() {
                 </button>
               </>
             )}
+
             <h3 className="p-2 text-sm font-semibold">{video.title}</h3>
-            {/* 2. DISPLAY the published date */}
+
             <p className="px-2 pb-2 text-xs text-gray-500">
-                Published: **{formatDate(video.publishedAt)}**
+              Published: {formatDate(video.publishedAt)}
             </p>
           </div>
         ))}
