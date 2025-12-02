@@ -1,5 +1,5 @@
 "use client"
-import YouTube from "./data/Youtube"
+import YouTube from "./data/YouTube"
 
 export default function Blog () {
 
