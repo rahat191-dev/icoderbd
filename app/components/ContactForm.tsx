@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-  const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle"); // Added 'error' status
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -14,15 +14,33 @@ export default function ContactForm() {
     setStatus("loading");
 
     try {
-      // Simulate network request
-      await new Promise((res) => setTimeout(res, 1500));
-      setStatus("success");       // Show "Sended ✔"
-      setFormData({ name: "", email: "", message: "" });
+      // --- START OF FIX: Replace simulation with real API call ---
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+      if (result.success) {
+        setStatus("success"); // Show "Sended ✔"
+        setFormData({ name: "", email: "", message: "" });
+      } else {
+        throw new Error(result.error || "Failed to send email");
+      }
+      // --- END OF FIX ---
       
-      // No timeout to reset — it will stay
-    } catch {
-      setStatus("idle");
-      alert("Error sending message");
+    } catch (error) {
+      console.error("Submission Error:", error);
+      setStatus("error"); // Use a distinct error status
+      // Optionally reset to idle after a short delay
+      setTimeout(() => setStatus("idle"), 3000); 
     }
   };
 
@@ -92,6 +110,12 @@ export default function ContactForm() {
           {status === "success" && (
             <div className="flex items-center gap-2 text-brand font-bold">
               Sended <span className="text-xl">✔</span>
+            </div>
+          )}
+          {/* Added 'error' UI state */}
+          {status === "error" && (
+            <div className="flex items-center gap-2 text-red-500 font-bold">
+              Failed! <span className="text-xl">✖</span>
             </div>
           )}
         </button>
