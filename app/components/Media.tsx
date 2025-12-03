@@ -78,16 +78,20 @@ export default function Media() {
   const finalTransform = `translateX(${-requiredShift + offset}px)`;
 
   return (
-    <main className="flex flex-col items-center">
+    <main className="flex flex-col text-pg items-center">
       <div className="text-foreground border-b border-pg pb-2 w-full mb-6">
         <h2 className="text-xl font-extrabold">
           <span className="text-brand font-extrabold">M</span>edia
         </h2>
       </div>
 
+      <div className="flex w-full gap-1 text-lg mb-4 pb-2 font-extrabold items-center border-pg border-b">
+        <img className="w-8" src={"/images/svg/media/slider.svg"} />
+        <h3 className="font-extrabold">SLIDER</h3>
+      </div>
       {/* --- CAROUSEL --- */}
       <div
-        className="relative h-72 flex justify-center items-center overflow-hidden"
+        className="relative h-full flex justify-center items-center overflow-hidden"
         style={{ width: `${VISIBLE_WIDTH}px` }}
       >
         {/* --- LEFT BUTTON --- */}
