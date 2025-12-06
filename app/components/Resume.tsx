@@ -29,8 +29,18 @@ export default function Resume () {
   </p>
 </div>
      </div>
-    </div>
 
+<div className="relative border-l mt-4 pl-4 border-pg ml-2">
+  <div className="absolute -left-[7px] top-0 w-3 h-3 bg-pg rounded-full"></div>
+  <div className="inline-block text-pg px-2 border border-pg rounded-md">2026-Future</div>
+  <div className="text-pg font-extrabold pb-2">Coming Soon</div>
+  <p className="text-sm pb-2">Coming Soon</p>
+  <p>
+   Coming Soon
+  </p>
+
+     </div>
+    </div>
 
          <div>
             <div className="flex flex-col text-base">

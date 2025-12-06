@@ -12,10 +12,24 @@ export async function GET() {
       );
     }
 
+    // Timeout Controller (Slow Internet Protection)
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000); // 8 sec timeout
+
     // --- Get channel info ---
     const channelRes = await fetch(
-      `https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${CHANNEL_ID}&key=${API_KEY}`
+      `https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${CHANNEL_ID}&key=${API_KEY}`,
+      { signal: controller.signal }
     );
+
+    if (!channelRes.ok) {
+      clearTimeout(timeout);
+      return NextResponse.json(
+        { error: "Failed to load channel data", status: channelRes.status },
+        { status: 500 }
+      );
+    }
+
     const channelData = await channelRes.json();
 
     const channelLogo =
@@ -24,8 +38,19 @@ export async function GET() {
 
     // --- Get videos ---
     const videoRes = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=12`
+      `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=12`,
+      { signal: controller.signal }
     );
+
+    clearTimeout(timeout);
+
+    if (!videoRes.ok) {
+      return NextResponse.json(
+        { error: "Failed to load videos", status: videoRes.status },
+        { status: 500 }
+      );
+    }
+
     const videoData = await videoRes.json();
 
     const videos =
@@ -43,9 +68,16 @@ export async function GET() {
       channelTitle,
       videos,
     });
-  } catch (err) {
+  } catch (err: any) {
+    if (err.name === "AbortError") {
+      return NextResponse.json(
+        { error: "Slow Network — Request Timeout (8s)" },
+        { status: 408 } // Timeout response
+      );
+    }
+
     return NextResponse.json(
-      { error: "Server Error", message: (err as Error).message },
+      { error: "Server Error", message: err.message },
       { status: 500 }
     );
   }
