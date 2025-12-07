@@ -60,10 +60,10 @@ export default function BdcPress() {
         </a>
                 </div>
                 
-    <div className="p-4">
+    <div>
 
       {/* Videos Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 text-black md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 text-black md:grid-cols-3 gap-3">
         {videos.map((video, i) => {
           const videoId = video["yt:videoId"];
           const title = video.title;
@@ -83,7 +83,7 @@ export default function BdcPress() {
                   allowFullScreen
                 ></iframe>
               </div>
-              <div className="p-3">
+              <div className="p-2">
                 <h3 className="text-sm font-semibold line-clamp-2" title={title}>
                     {title}
                 </h3>
