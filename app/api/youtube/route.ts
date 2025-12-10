@@ -9,27 +9,23 @@ export async function GET() {
     const rss = await fetch(feedUrl);
     const xmlText = await rss.text();
 
-    // XML → JSON Convert
-    const parser = new DOMParser();
-    const xml = parser.parseFromString(xmlText, "text/xml");
+    // --- Extract each <entry> block ---
+    const entryBlocks = xmlText.match(/<entry>[\s\S]*?<\/entry>/g) || [];
 
-    const entries = xml.getElementsByTagName("entry");
-    const videos: any[] = [];
+    const videos = entryBlocks.map((entry: string) => {
+      const title = entry.match(/<title>(.*?)<\/title>/)?.[1] || "";
+      const videoId = entry.match(/<yt:videoId>(.*?)<\/yt:videoId>/)?.[1] || "";
 
-    for (let i = 0; i < entries.length; i++) {
-      const e = entries[i];
-
-      const title = e.getElementsByTagName("title")[0]?.textContent || "";
-      const videoId =
-        e.getElementsByTagName("yt:videoId")[0]?.textContent || "";
-
-      videos.push({ title, "yt:videoId": videoId });
-    }
+      return { title, "yt:videoId": videoId };
+    });
 
     return NextResponse.json({ feed: { entry: videos } });
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json(
-      { error: "Failed to fetch YouTube feed", details: String(error) },
+      {
+        error: "Failed to fetch YouTube feed",
+        details: error.toString(),
+      },
       { status: 500 }
     );
   }

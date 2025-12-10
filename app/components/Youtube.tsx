@@ -6,7 +6,7 @@ export default function Youtube() {
   const [videos, setVideos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // YouTube channel info
+  // Channel Info
   const CHANNEL_ID = "UCPmAACUzyE1HyOlEvOrWWRw";
   const CHANNEL_NAME = "VS Coder BD";
 
@@ -14,17 +14,17 @@ export default function Youtube() {
     async function load() {
       try {
         const res = await fetch("/api/youtube");
+
+        if (!res.ok) {
+          console.error("API ERROR", await res.text());
+          setLoading(false);
+          return;
+        }
+
         const data = await res.json();
+        const entries = data?.feed?.entry ?? [];
 
-        const entries = data?.feed?.entry;
-
-        const videosArray = entries
-          ? Array.isArray(entries)
-            ? entries
-            : [entries]
-          : [];
-
-        setVideos(videosArray);
+        setVideos(entries);
       } catch (err) {
         console.error("Failed to load videos", err);
       } finally {
@@ -36,10 +36,15 @@ export default function Youtube() {
   }, []);
 
   if (loading)
-    return <p className="text-center p-5 text-lg">Loading videos...</p>;
+    return (
+      <p className="text-center p-5 text-lg">
+        Loading videos...
+      </p>
+    );
 
   return (
     <main>
+      {/* Header */}
       <div className="flex justify-between gap-1 mb-4 pb-2 font-extrabold items-center border-pg border-b">
         <div className="flex gap-1 items-center">
           <img className="w-7" src={"/images/svg/media/yt.svg"} />
@@ -56,14 +61,17 @@ export default function Youtube() {
         </a>
       </div>
 
+      {/* VIDEO SECTION */}
       <div>
-        {/* If no content */}
-        {videos.length === 0 ? (
+        {/* No Content Case */}
+        {videos.length === 0 && (
           <p className="text-center text-gray-500 py-6 text-sm font-medium">
             No content uploaded
           </p>
-        ) : (
-          /* Videos Grid */
+        )}
+
+        {/* Videos Grid */}
+        {videos.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 text-black md:grid-cols-3 gap-3">
             {videos.map((video, i) => {
               const videoId = video["yt:videoId"];
@@ -84,11 +92,9 @@ export default function Youtube() {
                       allowFullScreen
                     ></iframe>
                   </div>
+
                   <div className="p-2">
-                    <h3
-                      className="text-sm font-semibold line-clamp-2"
-                      title={title}
-                    >
+                    <h3 className="text-sm font-semibold line-clamp-2" title={title}>
                       {title}
                     </h3>
                   </div>
