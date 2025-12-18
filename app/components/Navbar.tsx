@@ -35,7 +35,7 @@ export default function Navbar({ className, setActiveSection }: NavbarProps) {
               <div className="flex items-center gap-1">
                 <a href="/" className="font-extrabold text-sm">VS Coder BD</a>
                 <a href={`https://www.youtube.com/@vscoderbd`}
-                className="text-xs bg-red-500 hover:bg-red-600 px-1 py-0.5 rounded">Youtube</a>
+                className="text-xs bg-red-500/50 hover:bg-red-500 px-0.5 rounded">Youtube</a>
                 <p></p>
               </div>
                 <div className="mt-[-3px] text-brand text-sm"><TypingAnimation /></div>

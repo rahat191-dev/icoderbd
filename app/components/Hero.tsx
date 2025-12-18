@@ -33,7 +33,7 @@ export default function Hero() {
             <a href="tel:+8801920852271" className="icon-filter">
               <img src="/images/svg/contacts/call.svg"/>
               </a>
-            <a href="mailto:rahat292.dev@gmail.com" className="icon-filter">
+            <a href="mailto:vscoderbd.dev@gmail.com" className="icon-filter">
               <img src="/images/svg/contacts/email.svg"/>
               </a>
           </div>

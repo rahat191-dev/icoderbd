@@ -45,7 +45,7 @@ export default function GetInTouch() {
   }}
 >
   <div className="text-zinc-600 bg-brand rounded px-2">Email:</div>
-  <div className="text-pg">rahat292.dev@gmail.com</div>
+  <div className="text-pg">vscoderbd.dev@gmail.com</div>
 </div>
 <div
   className="flex justify-between items-center pb-2"
