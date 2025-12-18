@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     // Send Email
     const data = await resend.emails.send({
       // Sender name = Rahat Hossain, email = verified Resend email
-      from: "Rahat Hossain <onboarding@resend.dev>",
+      from: "VS Coder BD <onboarding@resend.dev>",
       to: "vscoderbd@gmail.com",        
       subject: `New Message from ${name}`,
       html: `
